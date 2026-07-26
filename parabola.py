@@ -9,8 +9,11 @@ a = int(input("Defina a: "))
 b = int(input("Defina b: "))
 c = int(input("Defina c: "))
 
+def parabola(a,b,c,x):
+    y = a*(x**2) + b*x + c
+    return y
 def animacao(i):
-    line.set_data(xPonto[:i], yPonto[:i])
+    line.set_data(xPonto, ((xPonto+i - foco['x'])**2/(2*parametro)) + yVertice)
     return line,
 def dados_fundamentais_parabola():
     print(f'parametro = {parametro}')
@@ -58,36 +61,11 @@ ax.spines['top'].set_color('none')
 xPonto = np.arange(-100, 100, 0.1)
 yPonto = []
 y_d=[]
-for x in xPonto:
-    yPonto.append(((x - foco['x'])**2/(2*parametro)) + yVertice)
-    y_d.append(x * 0 + (yFoco - parametro))
 
 ax.set_xlim(-10, 10)
 ax.set_ylim(-10, 10)
-line, = ax.plot(xPonto, yPonto, color='red')
-lined, = ax.plot(xPonto, y_d, color='blue', label='Diretriz')
-ani = animation.FuncAnimation(fig, animacao, frames=range(len(xPonto)), interval=10)
+line, = ax.plot(xPonto, parabola(a,b,c,xPonto), color='red')
+#lined, = ax.plot(xPonto, y_d, color='blue', label='Diretriz')
+ani = animation.FuncAnimation(fig, animacao, frames=np.arange(0,10,0.01), interval=10)
 plt.show()
 
-
-'''ax.set_xlim(-10, 10)
-ax.set_ylim(-10, 10)
-plt.plot(xPonto, yPonto)
-x_d = np.arange(-100, 100, 0.1)
-y_d = x_d*0 + (yFoco - parametro)
-plt.plot(x_d, y_d)
-plt.show()'''
-
-'''
-distanciaPontoFoco = 0
-distanciaPontoReta = 0
-for x in xPonto:
-    for y in yPonto:
-        distanciaPontoFoco = math.sqrt((x - foco['x']) ** 2 + (y - foco['y']) ** 2)
-        distanciaPontoReta = abs(y - diretriz)
-
-        if distanciaPontoFoco == distanciaPontoReta:
-            print(f'({x},{y})')
-            print(f'PF = {distanciaPontoFoco:.2f}')
-            print(f'PR = {distanciaPontoReta:.2f}')
-'''
