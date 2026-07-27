@@ -7,11 +7,13 @@ print("equação da parábola com a diretriz paralela ao eixo x")
 print("Forma da equação: ax²+bx+c")
 a = int(input("Defina a: "))
 b = int(input("Defina b: "))
-c = int(input("Defina c: "))
+c = float(input("Defina c: "))
+r = int(input("Defina r: "))
 
 def parabola(a,b,c,x):
     y = a*(x**2) + b*x + c
     return y
+
 def diretriz_parabola(p):
     y_d = foco['y'] - p
     return f'y = {0}*x + {y_d}'
@@ -60,12 +62,14 @@ dados_fundamentais_parabola()
 fig, ax = plt.subplots(1, 1)
 l, = plt.plot([], [], 'k-')
 l2, = plt.plot([], [], 'r-')
+l3, = plt.plot([], [], 'g-')
 ax.spines['left'].set_position('zero')
 ax.spines['bottom'].set_position('zero')
 ax.spines['right'].set_color('none')
 ax.spines['top'].set_color('none')
-ax.set_xlim(-5, 5)
-ax.set_ylim(-5, 10)
+ax.set_xlim(-10, 10)
+ax.set_ylim(-10, 10)
+plt.axis('equal')
 
 metadata = dict(title='Parabola')
 writter = animation.PillowWriter(fps=25)
@@ -74,14 +78,31 @@ x_p = []
 y_p = []
 x_d = []
 y_d = []
+x_c = []
+y_c = []
 
 with writter.saving(fig, 'parabola.gif', 100):
-    for x in np.linspace(-10, 10, 100):
+    for x, theta in zip(np.linspace(-10, 10, 100), np.linspace(0, 2 * np.pi, 100)):
         x_p.append(x)
         x_d.append(x)
         y_p.append(parabola(a,b,c,x))
         y_d.append(x*0 + foco['y'] - parametro )
-
         l.set_data(x_p, y_p)
         l2.set_data(x_d, y_d)
+        x = xFoco + r * np.cos(theta)
+        x_c.append(x)
+        y = yFoco + r * np.sin(theta)
+        y_c.append(y)
+        l3.set_data(x_c, y_c)
+
         writter.grab_frame()
+
+
+"""with writter.saving(fig, 'circunferência.gif', 100):
+    for theta in np.linspace(0, 2*np.pi, 100):
+        x = xFoco + r*np.cos(theta)
+        x_c.append(x)
+        y = yFoco + r*np.sin(theta)
+        y_c.append(y)
+        l3.set_data(x_c, y_c)
+        writter.grab_frame()"""
