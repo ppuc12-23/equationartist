@@ -1,15 +1,28 @@
 import math
+from xmlrpc.client import boolean
+
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-# Estudo de parábolas
-print("equação da parábola com a diretriz paralela ao eixo x")
-print("Forma da equação: ax²+bx+c")
-a = int(input("Defina a: "))
-b = int(input("Defina b: "))
-c = float(input("Defina c: "))
-r = int(input("Defina r: "))
+# Estudo de equações e suas projeções em um plano n-dimensional
+def menu_conica():
+    # menu temporário, o app deve automatizar a identificação da cônica
+    print('1 - Parábola')
+    print('2 - Elipse')
+    print('3 - Hiperbole')
+def menu_abordagem():
+    print('1 - coeficientes')
+    print('2 - raizes')
+    print('3 - Foco e parametro')
+    print('5 - foco e diretriz')
 
+def abordagem_coeficientes():
+    print("Forma da equação: ax²+bx+c")
+    a = int(input("Defina a: "))
+    b = int(input("Defina b: "))
+    c = float(input("Defina c: "))
+    coeficientes = [a, b, c]
+    return coeficientes
 def parabola(a,b,c,x):
     y = a*(x**2) + b*x + c
     return y
@@ -28,36 +41,55 @@ def dados_fundamentais_parabola():
     print(f'Foco ({foco['x']:.2f}, {foco['y']:.2f})')
     print(f'diretriz: {diretriz_parabola(parametro)}')
 
-#pesquisa de raízes
-discriminante = discriminante_parabola(a, b, c)
-print(f'o valor do discriminante é: {discriminante}')
-if discriminante < 0:
-    print("a equação não possui raízes reais")
-    moduloDiscriminante = -1*discriminante
-    parteImaginaria = math.sqrt(moduloDiscriminante)/(2*a)
-    parteReal = -b/(2*a)
-    x1 = {'Real': parteReal, 'imaginaria': + parteImaginaria}
-    x2 = {'Real': parteReal, 'imaginaria': - parteImaginaria}
-    print(f'x1 = {x1["Real"]:.2f} + {x1["imaginaria"]:.2f}i')
-    print(f'x2 = {x2["Real"]:.2f} + {x2["imaginaria"]:.2f}i')
-else:
-    print(f'a raiz quadrada do discriminante é: {math.sqrt(discriminante)}')
-    x1 = (-b + math.sqrt(discriminante))/(2*a)
-    x2 = (-b - math.sqrt(discriminante))/(2*a)
-    print("x1 =", x1)
-    print("x2 =", x2)
 
-#pontos notáveis
-parametro = 1/(2*a)
-xVertice = -b / (2 * a)
-yVertice = -discriminante / (4 * a)
-vertice = {'x': xVertice, 'y': yVertice}
-xFoco = -b/(2*a)
-yFoco = yVertice + parametro/2
-foco = {'x': xFoco, 'y': yFoco}
+n_dimensoes = int(input('Quantas dimensões tem o plano que você quer estudar?'))
+if n_dimensoes == 2:
+    grau_equacao = int(input('Quantas graus tem a equação que você quer estudar?'))
+    if grau_equacao == 2:
+        c = input('É uma cônica? (s/n)')
+        if c == 's':
+            while True:
+                menu_conica()
+                opcao = int(input('Digite a cônica desejada:'))
+                if opcao == 1:
+                    while True:
+                        menu_abordagem()
+                        abordagem = int(input('Escolha a abordagem:'))
+                        if abordagem == 1:
+                            coeficientes = abordagem_coeficientes()
+                            a = coeficientes[0]
+                            b = coeficientes[1]
+                            c = coeficientes[2]
+                            discriminante = discriminante_parabola(a, b, c)
+                            print(f'o valor do discriminante é: {discriminante}')
+                            if discriminante < 0:
+                                print("a equação não possui raízes reais")
+                                moduloDiscriminante = -1 * discriminante
+                                parteImaginaria = math.sqrt(moduloDiscriminante) / (2 * a)
+                                parteReal = -b / (2 * a)
+                                x1 = {'Real': parteReal, 'imaginaria': + parteImaginaria}
+                                x2 = {'Real': parteReal, 'imaginaria': - parteImaginaria}
+                                print(f'x1 = {x1["Real"]:.2f} + {x1["imaginaria"]:.2f}i')
+                                print(f'x2 = {x2["Real"]:.2f} + {x2["imaginaria"]:.2f}i')
+                            else:
+                                print(f'a raiz quadrada do discriminante é: {math.sqrt(discriminante)}')
+                                x1 = (-b + math.sqrt(discriminante)) / (2 * a)
+                                x2 = (-b - math.sqrt(discriminante)) / (2 * a)
+                                print("x1 =", x1)
+                                print("x2 =", x2)
 
-dados_fundamentais_parabola()
+                            # pontos notáveis
+                            parametro = 1 / (2 * a)
+                            xVertice = -b / (2 * a)
+                            yVertice = -discriminante / (4 * a)
+                            vertice = {'x': xVertice, 'y': yVertice}
+                            xFoco = -b / (2 * a)
+                            yFoco = yVertice + parametro / 2
+                            foco = {'x': xFoco, 'y': yFoco}
 
+                            dados_fundamentais_parabola()
+
+"""
 #lugar geométrico
 fig, ax = plt.subplots(1, 1)
 l, = plt.plot([], [], 'k-')
@@ -96,7 +128,7 @@ with writter.saving(fig, 'parabola.gif', 100):
         l3.set_data(x_c, y_c)
 
         writter.grab_frame()
-
+"""
 
 """with writter.saving(fig, 'circunferência.gif', 100):
     for theta in np.linspace(0, 2*np.pi, 100):
